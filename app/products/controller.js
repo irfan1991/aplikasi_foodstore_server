@@ -10,14 +10,14 @@ const { policyFor } = require('../policy')
 
     try {
 
-    // let policy = policyFor(req.user)
+    let policy = policyFor(req.user)
 
-    // if (!policy.can('create', 'Product')) {
-    //     return res.json({
-    //         error : 1,
-    //         message : 'Anda tidak memiliki akses untuk membuat product'
-    //     })
-    // }
+    if (!policy.can('create', 'Product')) {
+        return res.json({
+            error : 1,
+            message : 'Anda tidak memiliki akses untuk membuat product'
+        })
+    }
               // datanya dari client ditangkep daalm variabl payload
     let payload = req.body
 
@@ -63,23 +63,19 @@ const { policyFor } = require('../policy')
                 await product.save();
                 return res.json(product);
               
-            }).catch((e) => { return res.json({
-                error : 1,
-                message : e.message,
-                // fields : err.errors
-            });});
+            });
 
-            // src.on('error', async () => {
-            //     // if (err && err.name === 'ValidationError') {
-            //         return res.json({
-            //             error : 1,
-            //             message : err.message,
-            //             fields : err.errors
-            //         });
-                // }
+            src.on('error', async () => {
+                if (err && err.name === 'ValidationError') {
+                    return res.json({
+                        error : 1,
+                        message : err.message,
+                        fields : err.errors
+                    });
+                }
                // next(err)
-                //next(err)
-            // })
+                next(err)
+            })
             
         } else {
 
@@ -133,8 +129,15 @@ async function index(req, res, next) {
             criteria = {...criteria, tags : {$in : tags.map(tag => tag._id)}}
         }
 
-        let products = await Product.find().limit(parseInt(limit)).skip(parseInt(skip)).populate('category').populate('tags');
-        return res.json(products);
+        let count =  await Product.find(criteria).countDocuments();
+
+        let products = await Product.find().limit(parseInt(limit))
+            .skip(parseInt(skip))
+            .populate('category')
+            .populate('tags')
+            .select('-__v');
+
+        return res.json({data : products, count});
 
     } catch (error) {
         next(error)
@@ -243,6 +246,14 @@ async function update(req, res, next) {
 async function destroy(req, res, next) {
     
     try {
+
+
+    if (!policy.can('delete', 'Product')) {
+        return res.json({
+            error : 1,
+            message : 'Anda tidak memiliki akses untuk menghapus product'
+        })
+    }
         
         let product = await Product.findOneAndDelete({_id: req.params.id});
         let currentImage = `${config.rootPath}/public/upload/${product.image_url}`;
