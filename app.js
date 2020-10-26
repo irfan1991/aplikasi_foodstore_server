@@ -3,7 +3,10 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const cors = require('cors')
 
+// cors
+app.use(cors())
 
 // import routes
 const productRouter = require('./app/products/router')
@@ -13,6 +16,8 @@ const authRouter = require('./app/auth/router')
 const wilayahRouter = require('./app/wilayah/router')
 const deliveryRouter = require('./app/delivery-addresses/router')
 const cartRouter = require('./app/cart/router')
+const orderRouter = require('./app/order/router')
+const invoiceRouter = require('./app/invoice/router')
 
 //middleware
 const {decodeToken} = require('./app/auth/middleware');
@@ -39,7 +44,8 @@ app.use('/auth', authRouter)
 app.use('/api', wilayahRouter)
 app.use('/api', deliveryRouter)
 app.use('/api', cartRouter)
-
+app.use('/api', orderRouter)
+app.use('/api', invoiceRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
