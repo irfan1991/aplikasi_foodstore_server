@@ -5,8 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors')
 
-// cors
-app.use(cors())
+
 
 // import routes
 const productRouter = require('./app/products/router')
@@ -24,6 +23,8 @@ const {decodeToken} = require('./app/auth/middleware');
 
 
 var app = express();
+// cors
+app.use(cors())
 // using middleware
 app.use(decodeToken());
 // view engine setup
