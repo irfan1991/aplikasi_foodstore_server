@@ -15,8 +15,6 @@ function decodeToken() {
 
             req.user = jwt.verify(token, config.secretKey)
             let user = await User.findOne({token: {$in : [token]}});
-
-            console.log(req.user);
             
             if (!user) {
                 return res.json({
@@ -27,11 +25,11 @@ function decodeToken() {
 
         } catch (error) {
             
-            if (err && err.name === 'JsonWebTokenError') {
+            if (error && error.name === 'JsonWebTokenError') {
                 return res.json({
                     error : 1,
-                    message : err.message,
-                    fields : err.errors
+                    message : error.message,
+                    fields : error.errors
                 });
             }
             next(error)

@@ -28,10 +28,10 @@ let orderSchema = Schema({
         ref : 'User'
     },
 
-    order_items : {
+    order_items : [{
         type : Schema.Types.ObjectId,
         ref : 'OrderItem'
-    }
+    }]
 
 }, {timestamps : true});
 
@@ -43,7 +43,7 @@ orderSchema.virtual('items_count').get(function () {
 });
 
 orderSchema.post('save', async function () {
-    let sub_total = this.order_items.reduce((sum, item => sum += (item.price * item.qty), 0))
+    let sub_total = this.order_items.reduce((sum, item) => sum += (item.price * item.qty), 0)
 
     // buat invoice 
 

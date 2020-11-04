@@ -28,7 +28,7 @@ let invoiceSchema =Schema({
 
     payment_status : {
         type : String,
-        enum : ['waitiing_payment', 'paid'],
+        enum : ['waiting_payment', 'paid'],
         default : 'waiting_payment'
     },
 

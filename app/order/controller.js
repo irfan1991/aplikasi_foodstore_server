@@ -21,9 +21,10 @@ async function store(req, res, next) {
     try {
 
         let {delivery_fee, delivery_address} = req.body;
-
+        
         // dapatin item keranjang
         let items = await CartItem.find({user :  req.user._id}).populate('product');
+          
 
         // cek apakah keranjang kosong gak
         if (!items.length) {
@@ -34,7 +35,7 @@ async function store(req, res, next) {
         }
 
         // mencari adrees 
-        let addresses = await DeveryAddress.findOne({_id: delivery_address});
+        let address = await DeveryAddress.findOne({_id: delivery_address});
 
         // createa order
         let order = new Order({
@@ -49,11 +50,16 @@ async function store(req, res, next) {
                 detail : address.detail
             },
 
+            user :  req.user._id
         });
 
+  
+        
         let orderItems = await OrderItem
             .insertMany(
-                items.map( item => ({
+                items.map( item => 
+                   
+                    ({
                     ...item,
                     name : item.product.name,
                     qty : parseInt(item.qty),
@@ -63,11 +69,14 @@ async function store(req, res, next) {
                 }))
             );
 
+            console.log(orderItems);       
+            
         // loop orderitem
-        orderItems.forEach(item => order.order_items.push(item));
+        orderItems.forEach(item => { 
+         order.order_items.push(item)});
 
         //saving oder
-        order.save();
+        await order.save();
 
         //delete items dalam keranjang
         await CartItem.deleteMany({user : req.user._id});
@@ -84,7 +93,8 @@ async function store(req, res, next) {
                 fields : error.errors
             })
         }
-
+       //  console.log(error);
+         
         next(error)
     }
 }

@@ -128,15 +128,15 @@ async function index(req, res, next) {
         
         let {limit = 10 , skip = 0 } = req.query;
 
-        let count =  await Product.find({user: req.user._id}).countDocuments();
+        let count =  await DeliveryAddress.find({user: req.user._id}).countDocuments();
 
         let deliveryAddress = await DeliveryAddress
             .find({user: req.user._id})
             .limit(parseInt(limit))
             .skip(parseInt(skip))
-            .soert('-createdAt');
+            .sort('-createdAt');
 
-        return res.json({data : deliveryAddress, count});
+        return res.json({data : deliveryAddress, count : count});
 
     } catch (error) {
         next(error)

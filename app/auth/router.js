@@ -9,7 +9,7 @@ passport.use(new localStrategy({usernameField:'email'},controller.localStrategy)
 router.post('/login', multer().none(), controller.login);
 router.post('/register', multer().none(), controller.register);
 router.get('/me', controller.me);
-router.get('/logout', controller.logout)
+router.post('/logout', controller.logout)
 
 module.exports = router
 

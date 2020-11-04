@@ -61,7 +61,7 @@ function policyFor(user) {
         policies['guest'](user, builder)
     }
 
-    return Ability(builder.rules);
+    return new Ability(builder.rules);
 }
 
 

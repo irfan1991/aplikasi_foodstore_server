@@ -80,10 +80,11 @@ async function update(req, res, next) {
        await CartItem.bulkWrite(cartItems.map(item => {
            return {
                updateOne:{
-                   filter : {user : req.user._id , product : item.product}
+                   filter : {user : req.user._id , product : item.product},
+                   update : item,
+                   upsert : true
                },
-               update : item,
-               upsert : true
+              
            }
        }))
         return res.json(cartItems)

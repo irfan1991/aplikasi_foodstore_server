@@ -55,8 +55,9 @@ async function getKecamatan(req, res, next) {
         if (!kode_induk) {
             return res.json(data);
         }
+        
 
-        return res.json(data.filter(kecamatan => kecamatan.kode_kabupatan == kode_induk))
+        return res.json(data.filter(kecamatan => kecamatan.kode_kabupaten == kode_induk))
     } catch (error) {
 
         return res.json({
