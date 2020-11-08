@@ -6,7 +6,7 @@ const {dbHost, dbName, dbPort, dbUser, dbPass, mongoUri} = require('../app/confi
 // {useNewUrlParser:true, useUnifiedTopology : true, useFindAndModify: false}
 // );
 
-mongoose.connect(mongoUri ||`mongodb://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbName}`, 
+mongoose.connect(mongoUri, 
 {useNewUrlParser:true, useUnifiedTopology : true, useFindAndModify: false}
 );
 const db = mongoose.connection;
