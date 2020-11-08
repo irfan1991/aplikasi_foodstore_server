@@ -1,12 +1,12 @@
 const mongoose = require('mongoose')
 
-const {dbHost, dbName, dbPort, dbUser, dbPass} = require('../app/config')
+const {dbHost, dbName, dbPort, dbUser, dbPass, mongoUri} = require('../app/config')
 
 // mongoose.connect(`mongodb://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbName}`, 
 // {useNewUrlParser:true, useUnifiedTopology : true, useFindAndModify: false}
 // );
 
-mongoose.connect(process.env.MONGODB_URI ||`mongodb://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbName}`, 
+mongoose.connect(mongoUri ||`mongodb://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbName}`, 
 {useNewUrlParser:true, useUnifiedTopology : true, useFindAndModify: false}
 );
 const db = mongoose.connection;
